@@ -1,0 +1,17 @@
+<Page loaded="loaded">
+<ActionBar title="Register">
+<NavigationButton text="Go Back" android.systemIcon="ic_menu_back" tap="onNavTap"></NavigationButton>
+</ActionBar>
+    <StackLayout orientation="vertical">
+    <Image src="~/images/logo-medium.png" stretch="none" horizontalAlignment="center" />
+    <Label text="Register Account" horizontalAlignment="center"/>
+    <TextField hint="Email"
+            keyboardType="email"
+            autocorrect="false"
+            autocapitalization="none" />
+    <TextField hint="Password"
+            secure="true" />
+    <Button text="Sign Up" tap="signUp"/>
+    </StackLayout>
+</Page>
+
