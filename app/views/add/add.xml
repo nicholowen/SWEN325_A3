@@ -1,9 +1,0 @@
-<Page loaded="loaded" actionBarHidden="true">
-<ActionBar title="Add Device">
-</ActionBar>
-    <StackLayout orientation="vertical" tap="clearTextfieldFocus">
-    
-    <Button text="Sign Up" tap="signUp"/>
-    </StackLayout>
-</Page>
-
