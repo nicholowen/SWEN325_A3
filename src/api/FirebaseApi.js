@@ -1,27 +1,16 @@
-// Import the functions you need from the SDKs you need
-import React from "react";
+//============
+// IMPORTS
+//============
+
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
+import { firebaseConfig } from "./firebase.config";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-
-//=========================
-// Configuration Data
-//=========================
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCrnDEZ-N-gYlbFipq_lpKUq8_bQaXb8Vg",
-  authDomain: "smarthome-2ce15.firebaseapp.com",
-  projectId: "smarthome-2ce15",
-  storageBucket: "smarthome-2ce15.appspot.com",
-  messagingSenderId: "1062461158814",
-  appId: "1:1062461158814:web:d0cf4f22f69a50fe22928f",
-  measurementId: "G-DWZT92WG5D",
-};
 
 //=========================
 // Database Initialization
