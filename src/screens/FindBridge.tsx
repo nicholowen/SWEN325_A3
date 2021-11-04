@@ -1,10 +1,8 @@
-import {
-  IonButton,
-  IonContent,
-  IonPage,
-  IonToast,
-  useIonToast,
-} from "@ionic/react";
+//=================
+// IMPORTS
+//=================
+
+import { IonButton, IonContent, IonPage, IonToast } from "@ionic/react";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { storeHueUsername } from "../api/FirebaseApi";

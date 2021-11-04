@@ -1,13 +1,11 @@
+//=================
+// IMPORTS
+//=================
+
 import React from "react";
 import { IonTabBar, IonTabButton, IonIcon, IonLabel } from "@ionic/react";
 
-import {
-  homeOutline,
-  gridOutline,
-  cogOutline,
-  sunny,
-  sunnyOutline,
-} from "ionicons/icons";
+import { homeOutline, sunnyOutline } from "ionicons/icons";
 
 const TabNavigator: React.FC = () => {
   return (

@@ -1,5 +1,6 @@
-// import dgram from "react-native-udp";
-// import UdpSocket from "react-native-udp/lib/types/UdpSocket";
+//=================
+// IMPORTS
+//=================
 
 import DeviceListItem from "../components/DeviceListItem";
 import { getBridgeStorage, getHueUsernameStorage } from "../storage/storage";

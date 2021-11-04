@@ -1,3 +1,7 @@
+//=================
+// IMPORTS
+//=================
+
 import { IonButton, IonContent, IonList, IonPage } from "@ionic/react";
 import React, { useState } from "react";
 import TabNavigator from "../components/TabNavigator";

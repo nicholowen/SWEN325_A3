@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+//=================
+// IMPORTS
+//=================
+
+import React, { useState } from "react";
 import {
   IonButton,
   IonButtons,

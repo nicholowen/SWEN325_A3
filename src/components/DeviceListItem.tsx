@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from "react";
+//=================
+// IMPORTS
+//=================
+
+import React, { useState } from "react";
 import {
-  IonButton,
-  IonButtons,
   IonCard,
   IonCardContent,
   IonCol,
   IonIcon,
   IonItem,
-  IonItemDivider,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonPopover,
   IonRange,
   IonRow,
   IonToggle,
-  IonToolbar,
-  useIonPopover,
 } from "@ionic/react";
-import { ellipsisVerticalOutline, sunny } from "ionicons/icons";
+import { sunny } from "ionicons/icons";
 
 import { toggleLight, controlBrightness } from "../api/HueApi";
 

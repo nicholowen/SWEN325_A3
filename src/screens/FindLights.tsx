@@ -1,3 +1,7 @@
+//=================
+// IMPORTS
+//=================
+
 import {
   IonButton,
   IonContent,
@@ -6,7 +10,6 @@ import {
   IonRow,
   IonSpinner,
   IonToast,
-  useIonToast,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";

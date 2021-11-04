@@ -1,4 +1,12 @@
+//=================
+// IMPORTS
+//=================
+
 import { getAllData, getHueUsername, getIP } from "../api/FirebaseApi";
+
+//====================
+// EXPORTED Functions
+//====================
 
 export const getDatabaseData = async (email) => {
   return getAllData(email);
@@ -33,10 +41,14 @@ export const pushArrayItem = function (arrayName, arrayItem) {
   this.setItem(arrayName, JSON.stringify(existingArray));
 };
 
-export function generateUUID(noOfDigits) {
+//==========================================
+// Generate Random string of (n) characters
+//==========================================
+
+export function generateUUID(n) {
   let str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXZ";
   let uuid = [];
-  for (let i = 0; i < noOfDigits; i++) {
+  for (let i = 0; i < n; i++) {
     uuid.push(str[Math.floor(Math.random() * str.length)]);
   }
   return uuid.join("");
