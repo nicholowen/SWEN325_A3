@@ -34,6 +34,7 @@ import Login from "./screens/Login";
 import Register from "./screens/Register";
 import FindBridge from "./screens/FindBridge";
 import FindLights from "./screens/FindLights";
+import LightSettings from "./screens/LightSettings";
 
 const App: React.FC = () => {
   return (
@@ -49,6 +50,11 @@ const App: React.FC = () => {
               <Route path="/register" component={Register} exact={true} />
               <Route path="/findBridge" component={FindBridge} exact={true} />
               <Route path="/findLights" component={FindLights} exact={true} />
+              <Route
+                path="/lightSettings"
+                component={LightSettings}
+                exact={true}
+              />
               <Route
                 path="/"
                 render={

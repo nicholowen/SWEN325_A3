@@ -35,7 +35,6 @@ import {
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [canLogin, setCanLogin] = useState(false);
 
   const history = useHistory();
 
@@ -52,15 +51,7 @@ const Login: React.FC = () => {
       console.log(databaseRetrieved);
       // redirect to home when log-in succeeds
       if (loggedIn && databaseRetrieved) {
-        // const defaultSettings: BridgeConfigSettings = {
-        //   email: email,
-        //   hueIp: databaseRetrieved.hueIp,
-        //   hueUsername: databaseRetrieved.hueUsername,
-        // };
-        // const push = await saveConfigSettings(defaultSettings);
-        // if (push) {
         history.push("/home");
-        // }
       }
     }
   };

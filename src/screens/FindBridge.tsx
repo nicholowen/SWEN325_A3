@@ -72,7 +72,7 @@ const FindBridge: React.FC = (props) => {
           isOpen={showSuccessToast}
           onDidDismiss={() => {
             setShowSuccessToast(false);
-            history.push("/home");
+            history.push("/home", {});
           }}
           message="Bridge found successfully."
           duration={2000}

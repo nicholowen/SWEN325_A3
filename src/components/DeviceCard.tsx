@@ -21,6 +21,12 @@ import {
 } from "@ionic/react";
 import { ellipsisVerticalOutline, sunny } from "ionicons/icons";
 import { toggleLight, controlBrightness } from "../api/HueApi";
+import { useHistory } from "react-router";
+import {
+  getLightConfig,
+  LightConfig,
+  saveLightConfig,
+} from "../storage/CapacitorStorage";
 
 //==================================================
 // Large device card to control light on-state and
@@ -37,6 +43,8 @@ const DeviceCard: React.FC<{
 }> = (props, key) => {
   const [onState, setOnState] = useState(props.on);
   const [brightness, setBrightness] = useState(props.bri);
+
+  const history = useHistory();
 
   const toggleState = (value: boolean) => {
     setOnState(value);
@@ -69,7 +77,22 @@ const DeviceCard: React.FC<{
                     setShowPopover({ showPopover: false, event: undefined })
                   }
                 >
-                  <IonItem button>Settings</IonItem>
+                  <IonItem
+                    button
+                    onClick={() => {
+                      var config: LightConfig = {
+                        id: props.id,
+                        hueIp: props.hueIp,
+                        hueUsername: props.hueUsername,
+                        name: props.name,
+                      };
+                      saveLightConfig(config).then(() => {
+                        history.push("/lightSettings");
+                      });
+                    }}
+                  >
+                    Settings
+                  </IonItem>
                 </IonPopover>
                 <IonButton
                   expand="block"

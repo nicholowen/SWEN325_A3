@@ -76,20 +76,42 @@ export const controlBrightness = async (id, bri, hueIp, hueUsername) => {
   return bri;
 };
 
+export const renameLight = async (id, name, hueIp, hueUsername) => {
+  try {
+    return await axios.put(
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id,
+      {
+        name: name,
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteHueLight = async (id, hueIp, hueUsername) => {
+  try {
+    await axios.delete(
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id
+    );
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 //===============================================================================
 // POST - Activates a beacon for 40 seconds that looks for devices.
 //
 // Sample Response : [ { "success": { "/lights": "Searching for new devices" }}]
 //===============================================================================
 
-export const searchForLights = async () => {
+export const searchForLights = async (hueIp, hueUsername) => {
   try {
-    const bridge = await getBridgeStorage();
-    const hueUsername = await getHueUsernameStorage();
     console.log(await hueUsername);
     if (hueUsername) {
       const res = await axios.post(
-        "http://" + bridge + "/api/" + hueUsername + "/lights/"
+        "http://" + hueIp + "/api/" + hueUsername + "/lights/"
       );
       return res;
     }
@@ -109,11 +131,9 @@ export const searchForLights = async () => {
 //    }
 //======================================================
 
-export const getNewLights = async () => {
-  const bridge = await getBridgeStorage();
-  const hueUsername = await getHueUsernameStorage();
+export const getNewLights = async (hueIp, hueUsername) => {
   const res = await axios.get(
-    "http://" + bridge + "/api/" + hueUsername + "/lights/new"
+    "http://" + hueIp + "/api/" + hueUsername + "/lights/new"
   );
   return res;
 };

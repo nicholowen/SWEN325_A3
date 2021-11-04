@@ -12,16 +12,18 @@ import {
 import React, { useState, useEffect } from "react";
 import TabNavigator from "../components/TabNavigator";
 import AppHeader from "../components/AppHeader";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import { getLightList } from "../utility/functions";
 import { getIP } from "../api/FirebaseApi";
 import {
+  cacheLightState,
   cacheSettingsState,
   getConfigSettings,
 } from "../storage/CapacitorStorage";
 
 const Home: React.FC = () => {
   const history = useHistory();
+
   const [bridgeDiscovered, setBridgeDiscovered] = useState(false);
   const [usernameDiscovered, setUsernameDiscovered] = useState(false);
   const [showDevices, setShowDevices] = useState(false);
@@ -31,6 +33,7 @@ const Home: React.FC = () => {
   var deviceList = [];
 
   const cacheSettings = cacheSettingsState;
+  const cacheLightConfig = cacheLightState;
 
   useEffect(() => {
     getConfigSettings().then((value) => {
@@ -44,21 +47,12 @@ const Home: React.FC = () => {
         getList(value.hueIp, value.hueUsername);
       }
     });
-  }, [cacheSettings]);
-
-  useEffect(() => {
-    getConfigSettings().then((value) => {
-      console.log("CHECKING", value.hueIp, value.hueUsername);
-      if (!value.hueIp || !value.hueUsername) {
-        console.log("here");
-        setBridgeDiscovered(false);
-      } else if (value.hueIp !== "" && value.hueUsername !== "") {
-        console.log(value.hueIp, value.hueUsername);
-        setBridgeDiscovered(true);
+    history.listen(() => {
+      getConfigSettings().then((value) => {
         getList(value.hueIp, value.hueUsername);
-      }
+      });
     });
-  }, []);
+  }, [cacheSettings, history]);
 
   const getList = async (hueIp: string, hueUsername: string) => {
     if (hueUsername !== "" || hueIp !== "") {

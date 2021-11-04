@@ -30,7 +30,7 @@ export const DrawerMenu: React.FC = () => {
           <IonItem
             button
             onClick={() => {
-              history.push("/findLights");
+              history.push("/findLights", {});
             }}
           >
             Search for Lights
@@ -39,7 +39,7 @@ export const DrawerMenu: React.FC = () => {
             button
             onClick={() => {
               LogoutUser();
-              history.push("/login");
+              history.push("/login", {});
             }}
           >
             Logout

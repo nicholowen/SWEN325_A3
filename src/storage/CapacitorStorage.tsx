@@ -48,3 +48,47 @@ export const getConfigSettings = async (): Promise<BridgeConfigSettings> => {
     return defaultConfigSettings;
   }
 };
+
+export const defaultLightConfig: LightConfig = {
+  id: "",
+  hueIp: "",
+  hueUsername: "",
+  name: "",
+};
+
+export var cacheLightState: LightConfig = Object.assign([], defaultLightConfig);
+
+export interface LightConfig {
+  id: string;
+  hueIp: string;
+  hueUsername: string;
+  name: string;
+}
+
+export const saveLightConfig = async (config: LightConfig) => {
+  const result = await Storage.set({
+    key: "lightConfig",
+    value: JSON.stringify(config),
+  })
+    .then(() => {
+      return true;
+    })
+    .catch((error) => {
+      console.log(error);
+      return false;
+    });
+
+  cacheLightState = config;
+
+  return result;
+};
+
+export const getLightConfig = async (): Promise<LightConfig> => {
+  const result = await Storage.get({ key: "lightConfig" });
+
+  if (typeof result.value === "string") {
+    return JSON.parse(result.value) as LightConfig;
+  } else {
+    return defaultLightConfig;
+  }
+};
