@@ -14,7 +14,7 @@ import {
   IonRow,
   IonText,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { RegisterUser } from "../api/FirebaseApi";

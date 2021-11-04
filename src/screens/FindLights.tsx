@@ -13,10 +13,9 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { discoverBridge, getNewLights, searchForLights } from "../api/HueApi";
+import { getNewLights, searchForLights } from "../api/HueApi";
 import AppHeader from "../components/AppHeader";
 import TabNavigator from "../components/TabNavigator";
-import { AuthContext } from "../AuthContext";
 import { getConfigSettings } from "../storage/CapacitorStorage";
 
 //=================================================================
@@ -26,9 +25,7 @@ import { getConfigSettings } from "../storage/CapacitorStorage";
 // find lights immediately
 //=================================================================
 
-const FindLights: React.FC = (props) => {
-  const { lightsExist, setLightsExist } = React.useContext(AuthContext);
-
+const FindLights: React.FC = () => {
   const history = useHistory();
   const [bridgeDiscovered, setBridgeDiscovered] = useState(false);
   const [showToast, setShowToast] = useState(false);

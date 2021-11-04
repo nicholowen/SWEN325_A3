@@ -18,13 +18,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 import { getAllData, LoginUser } from "../api/FirebaseApi";
-import { getDatabaseData } from "../storage/storage";
 import { validateAuthParameters } from "../utility/functions";
-import {
-  saveConfigSettings,
-  BridgeConfigSettings,
-  getConfigSettings,
-} from "../storage/CapacitorStorage";
 
 //=====================================
 // Authentication screen
@@ -47,7 +41,7 @@ const Login: React.FC = () => {
     //email/password validation
     if (validateAuthParameters(email, password, "", true)) {
       const loggedIn = await LoginUser(email, password);
-      const databaseRetrieved = await getDatabaseData(email); //retrieve bridge data from database
+      const databaseRetrieved = await getAllData(email); //retrieve bridge data from database
       console.log(databaseRetrieved);
       // redirect to home when log-in succeeds
       if (loggedIn && databaseRetrieved) {

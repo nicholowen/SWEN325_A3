@@ -25,7 +25,7 @@ const FindBridge: React.FC = (props) => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [email, setEmail] = useState("");
 
-  const currentConfig = getConfigSettings().then((value) => {
+  getConfigSettings().then((value) => {
     setEmail(value.email);
   });
 

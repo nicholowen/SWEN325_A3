@@ -7,10 +7,8 @@ import {
   IonPage,
   IonToast,
 } from "@ionic/react";
-import { stringify } from "querystring";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { useLocation } from "react-router-dom";
 import { deleteHueLight, renameLight } from "../api/HueApi";
 import AppHeader from "../components/AppHeader";
 import TabNavigator from "../components/TabNavigator";
@@ -58,9 +56,9 @@ const LightSettings: React.FC = () => {
   const deleteLight = async () => {
     const deleted = await deleteHueLight(id, hueIp, hueUsername);
     if (deleted) {
-      setShowSuccessToast(true);
+      setShowDeleteSuccessToast(true);
     } else {
-      setShowErrorToast(true);
+      setShowDeleteErrorToast(true);
     }
   };
 
@@ -79,6 +77,7 @@ const LightSettings: React.FC = () => {
         <IonButton
           onClick={() => {
             saveLightConfig(defaultLightConfig);
+            setNameInput("");
             history.push("/lights");
           }}
         >
@@ -91,6 +90,7 @@ const LightSettings: React.FC = () => {
           onDidDismiss={() => {
             setShowSuccessToast(false);
             saveLightConfig(defaultLightConfig);
+            setNameInput("");
             history.push("/lights");
           }}
           message="Light has been renamed!"
@@ -105,17 +105,18 @@ const LightSettings: React.FC = () => {
           duration={2000}
         />
         <IonToast
-          isOpen={showSuccessToast}
+          isOpen={showDeleteSuccessToast}
           onDidDismiss={() => {
             setShowDeleteSuccessToast(false);
             saveLightConfig(defaultLightConfig);
+            setNameInput("");
             history.push("/lights");
           }}
           message="Light has been deleted!"
           duration={2000}
         />
         <IonToast
-          isOpen={showErrorToast}
+          isOpen={showDeleteErrorToast}
           onDidDismiss={() => {
             setShowDeleteErrorToast(false);
           }}

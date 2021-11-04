@@ -1,26 +1,36 @@
+//=================
+// IMPORTS
+//=================
+
 import { Storage } from "@capacitor/storage";
 
-//storage key = 'bridgeSettings'
+//=======================================================
+// BRIDGE STORAGE
+//
+// Stores general authentication information for Hue Api
+//=======================================================
 
-//interface
-
-export const defaultConfigSettings: BridgeConfigSettings = {
-  email: "",
-  hueIp: "",
-  hueUsername: "",
-};
-
-export var cacheSettingsState: BridgeConfigSettings = Object.assign(
-  [],
-  defaultConfigSettings
-);
-
+//interface initialization
 export interface BridgeConfigSettings {
   email: string;
   hueIp: string;
   hueUsername: string;
 }
 
+//default settings - will be applied on log-out
+export const defaultConfigSettings: BridgeConfigSettings = {
+  email: "",
+  hueIp: "",
+  hueUsername: "",
+};
+
+//cache settings - is queried with useEffect
+export var cacheSettingsState: BridgeConfigSettings = Object.assign(
+  [],
+  defaultConfigSettings
+);
+
+//saves string from JSON format interface
 export const saveConfigSettings = async (settings: BridgeConfigSettings) => {
   const result = await Storage.set({
     key: "bridgeSettings",
@@ -39,6 +49,7 @@ export const saveConfigSettings = async (settings: BridgeConfigSettings) => {
   return result;
 };
 
+//returns JSON object from saved string
 export const getConfigSettings = async (): Promise<BridgeConfigSettings> => {
   const result = await Storage.get({ key: "bridgeSettings" });
 
@@ -49,15 +60,13 @@ export const getConfigSettings = async (): Promise<BridgeConfigSettings> => {
   }
 };
 
-export const defaultLightConfig: LightConfig = {
-  id: "",
-  hueIp: "",
-  hueUsername: "",
-  name: "",
-};
+//====================================================
+// LIGHT STORAGE
+//
+// Temporary storage for light parameters for Hue Api
+//====================================================
 
-export var cacheLightState: LightConfig = Object.assign([], defaultLightConfig);
-
+//interface initialization
 export interface LightConfig {
   id: string;
   hueIp: string;
@@ -65,6 +74,18 @@ export interface LightConfig {
   name: string;
 }
 
+//default settings - will be applied on log-out
+export const defaultLightConfig: LightConfig = {
+  id: "",
+  hueIp: "",
+  hueUsername: "",
+  name: "",
+};
+
+//cache settings - is queried with useEffect
+export var cacheLightState: LightConfig = Object.assign([], defaultLightConfig);
+
+//saves string from JSON format interface
 export const saveLightConfig = async (config: LightConfig) => {
   const result = await Storage.set({
     key: "lightConfig",
@@ -83,6 +104,7 @@ export const saveLightConfig = async (config: LightConfig) => {
   return result;
 };
 
+//returns JSON object from saved string
 export const getLightConfig = async (): Promise<LightConfig> => {
   const result = await Storage.get({ key: "lightConfig" });
 

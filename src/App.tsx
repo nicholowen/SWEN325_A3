@@ -1,10 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { IonApp, IonPage, IonRouterOutlet } from "@ionic/react";
 
 import { IonReactRouter } from "@ionic/react-router";
 import { Route, Redirect } from "react-router-dom";
-
-import { AuthCtxProvider } from "./AuthContext";
 
 // import { storage, isTokenPresent } from "./storage/storage";
 
@@ -38,41 +36,39 @@ import LightSettings from "./screens/LightSettings";
 
 const App: React.FC = () => {
   return (
-    <AuthCtxProvider>
-      <IonApp>
-        <IonReactRouter>
-          <DrawerMenu></DrawerMenu>
-          <IonPage id="main">
-            <IonRouterOutlet>
-              <Route path="/login" component={Login} exact={true} />
-              <Route path="/home" component={Home} exact={true} />
-              <Route path="/lights" component={Lights} exact={true} />
-              <Route path="/register" component={Register} exact={true} />
-              <Route path="/findBridge" component={FindBridge} exact={true} />
-              <Route path="/findLights" component={FindLights} exact={true} />
-              <Route
-                path="/lightSettings"
-                component={LightSettings}
-                exact={true}
-              />
-              <Route
-                path="/"
-                render={
-                  () =>
-                    localStorage.length !== 0 ? (
-                      <Redirect to="/home" />
-                    ) : (
-                      <Redirect to="/login" />
-                    )
-                  // )
-                }
-                exact={true}
-              />
-            </IonRouterOutlet>
-          </IonPage>
-        </IonReactRouter>
-      </IonApp>
-    </AuthCtxProvider>
+    <IonApp>
+      <IonReactRouter>
+        <DrawerMenu></DrawerMenu>
+        <IonPage id="main">
+          <IonRouterOutlet>
+            <Route path="/login" component={Login} exact={true} />
+            <Route path="/home" component={Home} exact={true} />
+            <Route path="/lights" component={Lights} exact={true} />
+            <Route path="/register" component={Register} exact={true} />
+            <Route path="/findBridge" component={FindBridge} exact={true} />
+            <Route path="/findLights" component={FindLights} exact={true} />
+            <Route
+              path="/lightSettings"
+              component={LightSettings}
+              exact={true}
+            />
+            <Route
+              path="/"
+              render={
+                () =>
+                  localStorage.length !== 0 ? (
+                    <Redirect to="/home" />
+                  ) : (
+                    <Redirect to="/login" />
+                  )
+                // )
+              }
+              exact={true}
+            />
+          </IonRouterOutlet>
+        </IonPage>
+      </IonReactRouter>
+    </IonApp>
   );
 };
 

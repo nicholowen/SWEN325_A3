@@ -1,15 +1,6 @@
 //=================
 // IMPORTS
 //=================
-
-import DeviceListItem from "../components/DeviceListItem";
-import {
-  getConfigSettings,
-  saveConfigSettings,
-} from "../storage/CapacitorStorage";
-import { getBridgeStorage, getHueUsernameStorage } from "../storage/storage";
-import { storeIp, storeHueUsername } from "./FirebaseApi";
-
 const axios = require("axios");
 
 //Standard URL: "https://[bridge ip address]/api/[generated username/"
@@ -153,7 +144,7 @@ export async function discoverBridge() {
       try {
         const bridge = bridgeIps[i].internalipaddress;
         console.log(bridge);
-        const res = await fetchWithTimeout("http://" + bridge + "/api");
+        await fetchWithTimeout("http://" + bridge + "/api");
         return bridge;
       } catch (error) {
         console.log("this is not the bridge");

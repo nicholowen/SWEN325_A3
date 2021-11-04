@@ -2,7 +2,7 @@
 // IMPORTS
 //=================
 
-import { IonButton, IonContent, IonList, IonPage } from "@ionic/react";
+import { IonContent, IonList, IonPage } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import TabNavigator from "../components/TabNavigator";
 import AppHeader from "../components/AppHeader";
@@ -11,13 +11,12 @@ import {
   cacheSettingsState,
   getConfigSettings,
 } from "../storage/CapacitorStorage";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 
 const Lights: React.FC = () => {
   const history = useHistory();
 
   const [devices, setDevices] = useState<typeof deviceList[]>([]);
-  const [bridgeDiscovered, setBridgeDiscovered] = useState(false);
   var deviceList: any = [];
 
   const cacheSettings = cacheSettingsState;
@@ -26,11 +25,7 @@ const Lights: React.FC = () => {
     getConfigSettings().then((value) => {
       console.log("CHECKING", value.hueIp, value.hueUsername);
       if (!value.hueIp || !value.hueUsername) {
-        console.log("here");
-        setBridgeDiscovered(false);
       } else if (value.hueIp !== "" && value.hueUsername !== "") {
-        console.log(value.hueIp, value.hueUsername);
-        setBridgeDiscovered(true);
         getList(value.hueIp, value.hueUsername);
       }
     });

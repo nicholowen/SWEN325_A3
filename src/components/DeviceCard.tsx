@@ -22,11 +22,7 @@ import {
 import { ellipsisVerticalOutline, sunny } from "ionicons/icons";
 import { toggleLight, controlBrightness } from "../api/HueApi";
 import { useHistory } from "react-router";
-import {
-  getLightConfig,
-  LightConfig,
-  saveLightConfig,
-} from "../storage/CapacitorStorage";
+import { LightConfig, saveLightConfig } from "../storage/CapacitorStorage";
 
 //==================================================
 // Large device card to control light on-state and

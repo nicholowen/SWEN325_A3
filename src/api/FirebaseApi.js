@@ -14,7 +14,6 @@ import {
 import {
   defaultConfigSettings,
   saveConfigSettings,
-  BridgeConfigSettings,
   getConfigSettings,
 } from "../storage/CapacitorStorage";
 

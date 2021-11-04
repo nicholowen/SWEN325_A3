@@ -60,11 +60,11 @@ export const getLightList = async (hueIp: string, hueUsername: string) => {
   return deviceList;
 };
 
-export const cacheData = () => {
-  //email
-  //bridge
-  //hueUser
-};
+//========================================
+// Authentication validation
+// Returns validity of email and password
+// for both login and registration pages
+//========================================
 
 export const validateAuthParameters = (
   email: string,
@@ -72,8 +72,9 @@ export const validateAuthParameters = (
   confirmPassword: string,
   login: boolean
 ) => {
+  // email validity regex
   let re =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   if (email.trim() === "" || password.trim() === "") {
     console.log("Username and password are required");

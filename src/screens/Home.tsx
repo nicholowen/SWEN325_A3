@@ -12,34 +12,35 @@ import {
 import React, { useState, useEffect } from "react";
 import TabNavigator from "../components/TabNavigator";
 import AppHeader from "../components/AppHeader";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { getLightList } from "../utility/functions";
 import { getIP } from "../api/FirebaseApi";
 import {
-  cacheLightState,
   cacheSettingsState,
   getConfigSettings,
 } from "../storage/CapacitorStorage";
+
+//====================================================
+// Main home page
+// Contains a list of lights which can be manipulated
+//====================================================
 
 const Home: React.FC = () => {
   const history = useHistory();
 
   const [bridgeDiscovered, setBridgeDiscovered] = useState(false);
-  const [usernameDiscovered, setUsernameDiscovered] = useState(false);
   const [showDevices, setShowDevices] = useState(false);
   const [devices, setDevices] = useState<typeof deviceList[]>([]);
-  const [email, setEmail] = useState("");
 
   var deviceList = [];
 
   const cacheSettings = cacheSettingsState;
-  const cacheLightConfig = cacheLightState;
 
+  //updates page when storage cache updates or history is used
   useEffect(() => {
+    //get storage and check if ip and username has been stored
     getConfigSettings().then((value) => {
-      console.log("CHECKING", value.hueIp, value.hueUsername);
       if (!value.hueIp || !value.hueUsername) {
-        console.log("here");
         setBridgeDiscovered(false);
       } else if (value.hueIp !== "" && value.hueUsername !== "") {
         console.log(value.hueIp, value.hueUsername);
@@ -47,6 +48,7 @@ const Home: React.FC = () => {
         getList(value.hueIp, value.hueUsername);
       }
     });
+    //listens for history updates and refreshes device list
     history.listen(() => {
       getConfigSettings().then((value) => {
         getList(value.hueIp, value.hueUsername);
@@ -54,6 +56,7 @@ const Home: React.FC = () => {
     });
   }, [cacheSettings, history]);
 
+  //retrieves list of devices currently discovered on the bridge
   const getList = async (hueIp: string, hueUsername: string) => {
     if (hueUsername !== "" || hueIp !== "") {
       const lights: any = await getLightList(hueIp, hueUsername);
@@ -63,6 +66,8 @@ const Home: React.FC = () => {
     }
   };
 
+  //Conditional rendering based on whether the
+  //bridge or lights have been discovered on this account
   const getConnected = () => {
     if (!bridgeDiscovered) {
       return (
@@ -87,6 +92,7 @@ const Home: React.FC = () => {
         </IonContent>
       );
     }
+    //device list will be empty if no lights have been discovered
     if (!devices || devices.length === 0) {
       return (
         <IonContent>
