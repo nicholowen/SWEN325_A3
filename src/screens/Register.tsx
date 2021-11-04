@@ -18,6 +18,11 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { RegisterUser } from "../api/FirebaseApi";
+import {
+  BridgeConfigSettings,
+  saveConfigSettings,
+} from "../storage/CapacitorStorage";
+import { validateAuthParameters } from "../utility/functions";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -33,40 +38,20 @@ const Login: React.FC = () => {
 
   const register = async () => {
     //email validation regex
-    let re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (email.trim() === "" || password.trim() === "") {
-      console.log("Username and password are required");
-      return false;
-    }
-
-    if (!re.test(email)) {
-      alert("Email is not valid");
-      return false;
-    }
-
-    if (password !== confirmPassword) {
-      console.log("Passwords do not match!");
-      return false;
-    }
-
-    if (confirmPassword.trim() === "") {
-      console.log("Please confirm your password");
-      return false;
-    }
-    if (password.length < 6) {
-      console.log("Password must be 6 or more characters!");
-      return false;
-    }
-
-    //Awaits on successful registration - navigates back to login page on fail.
-    const registered = await RegisterUser(email, password);
-    if (registered) {
-      localStorage.setItem("email", email);
-      history.push("/home");
-    } else {
-      history.push("/login");
+    if (validateAuthParameters(email, password, confirmPassword, false)) {
+      //Awaits on successful registration - navigates back to login page on fail.
+      const registered = await RegisterUser(email, password);
+      if (registered) {
+        var defaultSettings: BridgeConfigSettings = {
+          email: email,
+          hueIp: "",
+          hueUsername: "",
+        };
+        saveConfigSettings(defaultSettings);
+        history.push("/home");
+      } else {
+        history.push("/login");
+      }
     }
   };
 

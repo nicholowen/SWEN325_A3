@@ -17,10 +17,12 @@ export const getEmailStorage = () => {
 };
 
 export const getBridgeStorage = () => {
-  return localStorage.getItem("bridge");
+  if (localStorage.getItem("bridge")) {
+    return localStorage.getItem("bridge");
+  } else return false;
 };
 
-export const getHueUsernameStorage = async () => {
+export const getHueUsernameStorage = () => {
   return localStorage.getItem("hueUsername");
 };
 
