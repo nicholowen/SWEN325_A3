@@ -15,45 +15,58 @@ import AppHeader from "../components/AppHeader";
 import { useHistory } from "react-router";
 import { getLightList } from "../utility/functions";
 import { getIP } from "../api/FirebaseApi";
-import { getBridgeStorage } from "../storage/storage";
+import {
+  cacheSettingsState,
+  getConfigSettings,
+} from "../storage/CapacitorStorage";
 
 const Home: React.FC = () => {
   const history = useHistory();
   const [bridgeDiscovered, setBridgeDiscovered] = useState(false);
+  const [usernameDiscovered, setUsernameDiscovered] = useState(false);
   const [showDevices, setShowDevices] = useState(false);
   const [devices, setDevices] = useState<typeof deviceList[]>([]);
+  const [email, setEmail] = useState("");
+
   var deviceList = [];
 
+  const cacheSettings = cacheSettingsState;
+
   useEffect(() => {
-    bridge().then(() => {
-      if (bridgeDiscovered) {
-        getList();
+    getConfigSettings().then((value) => {
+      console.log("CHECKING", value.hueIp, value.hueUsername);
+      if (!value.hueIp || !value.hueUsername) {
+        console.log("here");
+        setBridgeDiscovered(false);
+      } else if (value.hueIp !== "" && value.hueUsername !== "") {
+        console.log(value.hueIp, value.hueUsername);
+        setBridgeDiscovered(true);
+        getList(value.hueIp, value.hueUsername);
+      }
+    });
+  }, [cacheSettings]);
+
+  useEffect(() => {
+    getConfigSettings().then((value) => {
+      console.log("CHECKING", value.hueIp, value.hueUsername);
+      if (!value.hueIp || !value.hueUsername) {
+        console.log("here");
+        setBridgeDiscovered(false);
+      } else if (value.hueIp !== "" && value.hueUsername !== "") {
+        console.log(value.hueIp, value.hueUsername);
+        setBridgeDiscovered(true);
+        getList(value.hueIp, value.hueUsername);
       }
     });
   }, []);
 
-  useEffect(() => {
-    history.listen(() => {
-      bridge().then(() => {
-        if (bridgeDiscovered) {
-          getList();
-        }
-      });
-    });
-  }, [history]);
-
-  const bridge = async () => {
-    const bridge = await getBridgeStorage();
-    if (bridge) {
-      setBridgeDiscovered(true);
+  const getList = async (hueIp: string, hueUsername: string) => {
+    if (hueUsername !== "" || hueIp !== "") {
+      const lights: any = await getLightList(hueIp, hueUsername);
+      setDevices(lights);
     } else {
-      setBridgeDiscovered(false);
+      setDevices([]);
     }
-  };
-
-  const getList = async () => {
-    const lights: any = await getLightList();
-    setDevices(lights);
   };
 
   const getConnected = () => {
@@ -102,7 +115,7 @@ const Home: React.FC = () => {
       <AppHeader pageTitle="Home" />
       <IonContent className="ion-padding">
         {getConnected()}
-        <IonList>{showDevices && devices}</IonList>
+        <IonList>{devices}</IonList>
       </IonContent>
       <TabNavigator />
     </IonPage>

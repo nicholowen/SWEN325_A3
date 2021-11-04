@@ -10,8 +10,8 @@ import DeviceListItem from "../components/DeviceListItem";
 // Generates Device Cards
 // Returns array of Card components
 //==================================
-export const getLightCards = async () => {
-  const data: any = await savedLights();
+export const getLightCards = async (hueIp: string, hueUsername: string) => {
+  const data: any = await savedLights(hueIp, hueUsername);
   const deviceList: any = [];
 
   for (var i in data) {
@@ -19,6 +19,8 @@ export const getLightCards = async () => {
     deviceList.push(
       <DeviceCard
         id={i}
+        hueIp={hueIp}
+        hueUsername={hueUsername}
         key={i}
         name={data[i].name}
         on={data[i].state.on}
@@ -34,8 +36,8 @@ export const getLightCards = async () => {
 // Generates Device *LIST* Cards
 // Returns array of Card components
 //==================================
-export const getLightList = async () => {
-  const data: any = await savedLights();
+export const getLightList = async (hueIp: string, hueUsername: string) => {
+  const data: any = await savedLights(hueIp, hueUsername);
   const deviceList: any = [];
   console.log(data);
   if (data) {
@@ -44,6 +46,8 @@ export const getLightList = async () => {
       deviceList.push(
         <DeviceListItem
           id={i}
+          hueIp={hueIp}
+          hueUsername={hueUsername}
           key={i}
           name={data[i].name}
           on={data[i].state.on}
@@ -62,7 +66,12 @@ export const cacheData = () => {
   //hueUser
 };
 
-export const validateAuthParameters = (email: string, password: string) => {
+export const validateAuthParameters = (
+  email: string,
+  password: string,
+  confirmPassword: string,
+  login: boolean
+) => {
   let re =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -70,15 +79,24 @@ export const validateAuthParameters = (email: string, password: string) => {
     console.log("Username and password are required");
     return false;
   }
-
   if (!re.test(email)) {
     alert("Email is not valid");
     return false;
+  }
+  if (!login) {
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match!");
+      return false;
+    }
+
+    if (confirmPassword.trim() === "") {
+      console.log("Please confirm your password");
+      return false;
+    }
   }
   if (password.length < 6) {
     console.log("Password must be 6 or more characters!");
     return false;
   }
-
   return true;
 };

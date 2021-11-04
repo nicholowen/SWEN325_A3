@@ -11,6 +11,12 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import {
+  defaultConfigSettings,
+  saveConfigSettings,
+  BridgeConfigSettings,
+  getConfigSettings,
+} from "../storage/CapacitorStorage";
 
 //=========================
 // Database Initialization
@@ -41,7 +47,7 @@ export const RegisterUser = async (email, password) => {
   try {
     const auth = getAuth();
     await createUserWithEmailAndPassword(auth, email, password);
-    StoreUsername(email);
+    storeUsername(email);
     return true;
   } catch (error) {
     console.log(error);
@@ -57,7 +63,7 @@ export const LogoutUser = async () => {
   try {
     const auth = getAuth();
     await signOut(auth);
-    localStorage.clear();
+    saveConfigSettings(defaultConfigSettings);
     return true;
   } catch (error) {
     console.log(error);
@@ -70,7 +76,7 @@ export const LogoutUser = async () => {
 // as document name
 //===============================================
 
-export const StoreUsername = (username) => {
+export const storeUsername = (username) => {
   firebase
     .firestore()
     .collection("users")
@@ -85,9 +91,9 @@ export const StoreUsername = (username) => {
 // Stores IP address of the Hue Bridge
 // Merges with current information
 //===============================================
-export const StoreIP = async (ip) => {
+export const storeIp = async (ip) => {
   try {
-    const username = localStorage.getItem("email");
+    const username = (await getConfigSettings()).email;
     const db = firebase.firestore();
     db.collection("users").doc(username).set(
       {
@@ -105,9 +111,9 @@ export const StoreIP = async (ip) => {
 // Merges with current information
 //===============================================
 
-export const storeHueUsername = (hueUsername) => {
+export const storeHueUsername = async (hueUsername) => {
   try {
-    const username = localStorage.getItem("email");
+    const username = (await getConfigSettings()).email;
     const db = firebase.firestore();
     db.collection("users").doc(username).set(
       {
@@ -182,14 +188,20 @@ export const getAllData = async (email) => {
     const db = firebase.firestore();
     const ref = db.collection("users").doc(email);
     const doc = await ref.get();
-
+    console.log(doc.data());
     if (doc.exists) {
-      console.log("Document Data: ", doc.data().hueIp);
-      localStorage.setItem("hueUsername", doc.data().hueUsername);
-      localStorage.setItem("bridge", doc.data().hueIp);
-      return true;
-    } else {
-      console.log("Error getting document");
+      console.log("here");
+      console.log(doc.id);
+      console.log(doc.data().hueIp, doc.data().hueUsername);
+      var defaultSettings = {
+        email: doc.id,
+        hueIp: doc.data().hueIp,
+        hueUsername: doc.data().hueUsername,
+      };
+      // console.log(defaultSettings);
+      saveConfigSettings(defaultSettings);
+      return doc.data();
+      // });
     }
   } catch (error) {
     console.log(error);

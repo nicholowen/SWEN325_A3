@@ -3,8 +3,12 @@
 //=================
 
 import DeviceListItem from "../components/DeviceListItem";
+import {
+  getConfigSettings,
+  saveConfigSettings,
+} from "../storage/CapacitorStorage";
 import { getBridgeStorage, getHueUsernameStorage } from "../storage/storage";
-import { StoreIP, storeHueUsername } from "./FirebaseApi";
+import { storeIp, storeHueUsername } from "./FirebaseApi";
 
 const axios = require("axios");
 
@@ -19,14 +23,11 @@ const axios = require("axios");
 // Sample response: [{"success":{"username": "83b7780291a6ceffbe0bd049104df"}}]
 //==============================================================================
 
-export const createUser = async () => {
+export const createUser = async (hueIp, email) => {
   try {
-    const res = await axios.post(
-      "https://" + localStorage.getItem("bridge") + "/api",
-      {
-        devicetype: localStorage.getItem("email"),
-      }
-    );
+    const res = await axios.post("http://" + hueIp + "/api", {
+      devicetype: email,
+    });
 
     const data = res.data;
     console.log("huedata ", data);
@@ -42,12 +43,10 @@ export const createUser = async () => {
 // Body: {"on": bool}
 //==============================================================================
 
-export const toggleLight = async (id, on) => {
+export const toggleLight = async (id, on, hueIp, hueUsername) => {
   try {
-    const bridge = getBridgeStorage();
-    const hueUsername = getHueUsernameStorage();
     return await axios.put(
-      "https://" + bridge + "/api/" + hueUsername + "/lights/" + id + "/state",
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id + "/state",
       {
         on: on,
       }
@@ -63,12 +62,10 @@ export const toggleLight = async (id, on) => {
 // Body: {"bri": [number 1 -245]}
 //==============================================================================
 
-export const controlBrightness = async (id, bri) => {
+export const controlBrightness = async (id, bri, hueIp, hueUsername) => {
   try {
-    const bridge = getBridgeStorage();
-    const hueUsername = getHueUsernameStorage();
     return await axios.put(
-      "https://" + bridge + "/api/" + hueUsername + "/lights/" + id + "/state",
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id + "/state",
       {
         bri: bri,
       }
@@ -92,7 +89,7 @@ export const searchForLights = async () => {
     console.log(await hueUsername);
     if (hueUsername) {
       const res = await axios.post(
-        "https://" + bridge + "/api/" + hueUsername + "/lights/"
+        "http://" + bridge + "/api/" + hueUsername + "/lights/"
       );
       return res;
     }
@@ -116,7 +113,7 @@ export const getNewLights = async () => {
   const bridge = await getBridgeStorage();
   const hueUsername = await getHueUsernameStorage();
   const res = await axios.get(
-    "https://" + bridge + "/api/" + hueUsername + "/lights/new"
+    "http://" + bridge + "/api/" + hueUsername + "/lights/new"
   );
   return res;
 };
@@ -135,10 +132,9 @@ export async function discoverBridge() {
     for (let i = 0; i < bridgeIps.length; i++) {
       try {
         const bridge = bridgeIps[i].internalipaddress;
-        const res = await fetchWithTimeout("https://" + bridge + "/api");
-        localStorage.setItem("bridge", bridge);
-        StoreIP(bridge);
-        return true;
+        console.log(bridge);
+        const res = await fetchWithTimeout("http://" + bridge + "/api");
+        return bridge;
       } catch (error) {
         console.log("this is not the bridge");
         continue;
@@ -184,13 +180,11 @@ const fetchWithTimeout = (url) => {
 // (id, on-state, brightness etc)
 //======================================================================
 
-export const savedLights = async () => {
+export const savedLights = async (hueIp, hueUsername) => {
   try {
-    const bridge = getBridgeStorage();
-    const hueUsername = getHueUsernameStorage();
     console.log(hueUsername);
     let res = await axios.get(
-      "https://" + bridge + "/api/" + hueUsername + "/lights/"
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/"
     );
     let data = res.data;
 

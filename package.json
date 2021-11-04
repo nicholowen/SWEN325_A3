@@ -8,6 +8,7 @@
     "@capacitor/haptics": "1.1.2",
     "@capacitor/keyboard": "1.1.2",
     "@capacitor/status-bar": "1.0.5",
+    "@capacitor/storage": "^1.2.3",
     "@ionic-native/service-discovery": "^5.36.0",
     "@ionic/react": "^5.8.4",
     "@ionic/react-router": "^5.5.0",

@@ -47,8 +47,6 @@ const FindLights: React.FC = (props) => {
     }
   };
 
-  console.log(isActive);
-
   useEffect(() => {}, [isActive]);
 
   const discover = async () => {

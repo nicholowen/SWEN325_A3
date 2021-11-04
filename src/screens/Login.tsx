@@ -17,8 +17,14 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
-import { LoginUser } from "../api/FirebaseApi";
+import { getAllData, LoginUser } from "../api/FirebaseApi";
 import { getDatabaseData } from "../storage/storage";
+import { validateAuthParameters } from "../utility/functions";
+import {
+  saveConfigSettings,
+  BridgeConfigSettings,
+  getConfigSettings,
+} from "../storage/CapacitorStorage";
 
 //=====================================
 // Authentication screen
@@ -39,32 +45,23 @@ const Login: React.FC = () => {
   //==============================================
 
   const login = async () => {
-    // email validation regex
-    let re =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    if (email.trim() === "" || password.trim() === "") {
-      console.log("Username and password are required");
-      return false;
-    }
-
-    if (!re.test(email)) {
-      alert("Email is not valid");
-      return false;
-    }
-    if (password.length < 6) {
-      console.log("Password must be 6 or more characters!");
-      return false;
-    }
-
-    // Awaits on successful login and bridge data retrieval from database
-
-    const loggedIn = await LoginUser(email, password);
-    const canLogIn = await getDatabaseData(email);
-    //redirect to home when log-in succeeds
-    if (loggedIn && canLogIn) {
-      localStorage.setItem("email", email);
-      history.push("/home");
+    //email/password validation
+    if (validateAuthParameters(email, password, "", true)) {
+      const loggedIn = await LoginUser(email, password);
+      const databaseRetrieved = await getDatabaseData(email); //retrieve bridge data from database
+      console.log(databaseRetrieved);
+      // redirect to home when log-in succeeds
+      if (loggedIn && databaseRetrieved) {
+        // const defaultSettings: BridgeConfigSettings = {
+        //   email: email,
+        //   hueIp: databaseRetrieved.hueIp,
+        //   hueUsername: databaseRetrieved.hueUsername,
+        // };
+        // const push = await saveConfigSettings(defaultSettings);
+        // if (push) {
+        history.push("/home");
+        // }
+      }
     }
   };
 

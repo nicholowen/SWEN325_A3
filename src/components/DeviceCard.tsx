@@ -29,6 +29,8 @@ import { toggleLight, controlBrightness } from "../api/HueApi";
 
 const DeviceCard: React.FC<{
   id: string;
+  hueIp: string;
+  hueUsername: string;
   name: string;
   on: boolean;
   bri: number;
@@ -38,12 +40,12 @@ const DeviceCard: React.FC<{
 
   const toggleState = (value: boolean) => {
     setOnState(value);
-    toggleLight(props.id, value);
+    toggleLight(props.id, value, props.hueIp, props.hueUsername);
   };
 
   const changeBrightness = async (value: number) => {
     setBrightness(value);
-    await controlBrightness(props.id, value);
+    await controlBrightness(props.id, value, props.hueIp, props.hueUsername);
   };
 
   const [popoverState, setShowPopover] = useState({

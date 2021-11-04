@@ -12,8 +12,8 @@ const Lights: React.FC = () => {
   const [devices, setDevices] = useState<typeof deviceList[]>([]);
   var deviceList: any = [];
 
-  const getSavedLights = async () => {
-    const lights: any = await getLightCards();
+  const getSavedLights = async (hueIp: string, hueUsername: string) => {
+    const lights: any = await getLightCards(hueIp, hueUsername);
     setDevices(lights);
   };
 
@@ -21,7 +21,7 @@ const Lights: React.FC = () => {
     <IonPage id="lights">
       <AppHeader pageTitle="My Lights" />
       <IonContent className="ion-padding">
-        <IonButton onClick={getSavedLights}>Search</IonButton>
+        {/* <IonButton onClick={getSavedLights}>Search</IonButton> */}
         <IonList>{devices}</IonList>
       </IonContent>
       <TabNavigator />

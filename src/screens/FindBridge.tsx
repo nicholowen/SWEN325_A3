@@ -5,10 +5,14 @@
 import { IonButton, IonContent, IonPage, IonToast } from "@ionic/react";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { storeHueUsername } from "../api/FirebaseApi";
+import { storeHueUsername, storeIp } from "../api/FirebaseApi";
 import { createUser, discoverBridge } from "../api/HueApi";
 import AppHeader from "../components/AppHeader";
 import TabNavigator from "../components/TabNavigator";
+import {
+  getConfigSettings,
+  saveConfigSettings,
+} from "../storage/CapacitorStorage";
 
 //================================================
 // Search page for bridge discovery
@@ -19,16 +23,27 @@ const FindBridge: React.FC = (props) => {
   const history = useHistory();
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const currentConfig = getConfigSettings().then((value) => {
+    setEmail(value.email);
+  });
 
   const discover = async () => {
-    const check = await discoverBridge();
-    if (check) {
-      const data = await createUser();
+    const hueIp = await discoverBridge();
+    storeIp(hueIp);
+    if (hueIp) {
+      const data = await createUser(hueIp, email);
       for (var i in data) {
         if (data[i].success) {
           const hueUsername = data[i].success.username;
           storeHueUsername(hueUsername);
-          localStorage.setItem("hueUsername", hueUsername);
+          var newConfigSettings = {
+            email: email,
+            hueIp: hueIp,
+            hueUsername: hueUsername,
+          };
+          saveConfigSettings(newConfigSettings);
           console.log(hueUsername);
         } else {
           console.log(data[i].error.description);
