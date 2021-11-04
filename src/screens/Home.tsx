@@ -14,7 +14,6 @@ import TabNavigator from "../components/TabNavigator";
 import AppHeader from "../components/AppHeader";
 import { useHistory } from "react-router";
 import { getLightList } from "../utility/functions";
-import { getIP } from "../api/FirebaseApi";
 import {
   cacheSettingsState,
   getConfigSettings,
@@ -30,9 +29,7 @@ const Home: React.FC = () => {
 
   const [bridgeDiscovered, setBridgeDiscovered] = useState(false);
   const [showDevices, setShowDevices] = useState(false);
-  const [devices, setDevices] = useState<typeof deviceList[]>([]);
-
-  var deviceList = [];
+  const [devices, setDevices] = useState<typeof Array[]>([]);
 
   const cacheSettings = cacheSettingsState;
 
@@ -48,7 +45,7 @@ const Home: React.FC = () => {
         getList(value.hueIp, value.hueUsername);
       }
     });
-    //listens for history updates and refreshes device list
+    //listens for history event and refreshes device list
     history.listen(() => {
       getConfigSettings().then((value) => {
         getList(value.hueIp, value.hueUsername);
@@ -68,7 +65,7 @@ const Home: React.FC = () => {
 
   //Conditional rendering based on whether the
   //bridge or lights have been discovered on this account
-  const getConnected = () => {
+  const getDiscovered = () => {
     if (!bridgeDiscovered) {
       return (
         <IonContent>
@@ -81,13 +78,6 @@ const Home: React.FC = () => {
             }}
           >
             Discover Bridge
-          </IonButton>
-          <IonButton
-            onClick={() => {
-              getIP();
-            }}
-          >
-            Get ip
           </IonButton>
         </IonContent>
       );
@@ -105,6 +95,7 @@ const Home: React.FC = () => {
         </IonContent>
       );
     }
+    //one-way toggle to stop re-rendering of components
     if (!showDevices) {
       setShowDevices(true);
     }
@@ -114,7 +105,7 @@ const Home: React.FC = () => {
     <IonPage>
       <AppHeader pageTitle="Home" />
       <IonContent className="ion-padding">
-        {getConnected()}
+        {getDiscovered()}
         <IonList>{devices}</IonList>
       </IonContent>
       <TabNavigator />

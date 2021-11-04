@@ -24,6 +24,13 @@ import {
 } from "../storage/CapacitorStorage";
 import { validateAuthParameters } from "../utility/functions";
 
+//========================================
+// Registration Page
+//
+// Redirects to home if successful
+// Links to login
+//========================================
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -104,7 +111,7 @@ const Login: React.FC = () => {
           <IonRow>
             <IonCol>
               <IonText>
-                Already have an account? <Link to="./login">Login</Link>{" "}
+                Already have an account? <Link to="./login">Login</Link>
               </IonText>
             </IonCol>
           </IonRow>

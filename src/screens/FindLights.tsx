@@ -27,23 +27,12 @@ import { getConfigSettings } from "../storage/CapacitorStorage";
 
 const FindLights: React.FC = () => {
   const history = useHistory();
-  const [bridgeDiscovered, setBridgeDiscovered] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [lightsFound, setLightsFound] = useState(false);
   const [numLights, setNumLights] = useState<number>(0);
   const [hasScanned, setHasScanned] = useState(false);
   const [searchComplete, setSearchComplete] = useState(false);
-
-  useEffect(() => {
-    bridge();
-  }, [bridgeDiscovered]);
-
-  const bridge = () => {
-    if (localStorage.getItem("lights") !== null) {
-      setBridgeDiscovered(true);
-    }
-  };
 
   useEffect(() => {}, [isActive]);
 
@@ -58,20 +47,21 @@ const FindLights: React.FC = () => {
 
     // Stop timer after 20 seconds (20000ms)
     setTimeout(function () {
-      clearInterval(timer);
+      clearInterval(timer); // end timer if button pressed a second time
       console.log("stopped");
       setIsActive(false);
       setSearchComplete(true);
       setHasScanned(false);
     }, 20000);
 
-    // Check for new lights eveny 2 seconds until timeout
+    // Check for new lights every 2 seconds until timeout
     const timer = setInterval(async function () {
       const res: any = await getNewLights(hueIp, hueUsername);
       console.log("checking...");
       console.log(res.data);
       var num = 0;
 
+      //end timer
       if (res.data.lastscan !== "active") {
         console.log("stopped");
         clearInterval(timer);
@@ -79,6 +69,8 @@ const FindLights: React.FC = () => {
       } else {
         setIsActive(true);
       }
+
+      //extract data from returned json
       for (var i in res.data) {
         const number = i;
         const name = res.data[i].name;

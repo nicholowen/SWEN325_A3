@@ -28,66 +28,59 @@ export const createUser = async (hueIp, email) => {
   }
 };
 
-//==============================================================================
-// PUT - Toggle a light that exists on Bridge network
-//
-// Body: {"on": bool}
-//==============================================================================
+//===============================================================================
+// FETCH - Fetches all bridges connected to network one step up from local Wi-Fi
+// Does a timed fetch to all bridge IPs - stores and returns true if ip of the
+// bridge is valid (does not time out)
+//===============================================================================
 
-export const toggleLight = async (id, on, hueIp, hueUsername) => {
+export async function discoverBridge() {
   try {
-    return await axios.put(
-      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id + "/state",
-      {
-        on: on,
+    const res = await fetchWithTimeout("https://discovery.meethue.com/");
+    const bridgeIps = await res.json();
+
+    for (let i = 0; i < bridgeIps.length; i++) {
+      try {
+        const bridge = bridgeIps[i].internalipaddress;
+        console.log(bridge);
+        await fetchWithTimeout("http://" + bridge + "/api");
+        return bridge;
+      } catch (error) {
+        console.log("this is not the bridge");
+        continue;
       }
-    );
+    }
   } catch (err) {
-    console.log(err);
+    console.log("thiserror");
+    console.error(err);
   }
-};
+}
 
-//==============================================================================
-// PUT - Control brightness of a light that exists on Bridge network
-//
-// Body: {"bri": [number 1 -245]}
-//==============================================================================
+//===============================================================================
+// Fetch time out function
+// Causes fetch request to timeout after 15seconds (1500ms)
+// to reduce waiting time
+//===============================================================================
 
-export const controlBrightness = async (id, bri, hueIp, hueUsername) => {
+const fetchWithTimeout = (url) => {
+  const timeout = 1500;
+  const { ...fetchOptions } = timeout;
+
   try {
-    return await axios.put(
-      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id + "/state",
-      {
-        bri: bri,
-      }
-    );
-  } catch (err) {
-    console.log(err);
-  }
-  return bri;
-};
-
-export const renameLight = async (id, name, hueIp, hueUsername) => {
-  try {
-    return await axios.put(
-      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id,
-      {
-        name: name,
-      }
-    );
+    return Promise.race([
+      fetch(url, fetchOptions),
+      new Promise((_, reject) => {
+        setTimeout(() => {
+          reject(
+            new Error(
+              `Request for ${url} timed out after ${timeout} milliseconds`
+            )
+          );
+        }, timeout);
+      }),
+    ]);
   } catch (error) {
-    console.log(error);
-  }
-};
-
-export const deleteHueLight = async (id, hueIp, hueUsername) => {
-  try {
-    await axios.delete(
-      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id
-    );
-    return true;
-  } catch (error) {
-    console.log(error);
+    console.log("ERROR HERE" + error);
   }
 };
 
@@ -129,60 +122,6 @@ export const getNewLights = async (hueIp, hueUsername) => {
   return res;
 };
 
-//===============================================================================
-// FETCH - Fetches all bridges connected to network one step up from local Wi-Fi
-// Does a timed fetch to all bridge IPs - stores and returns true if ip of the
-// bridge is valid (does not time out)
-//===============================================================================
-
-export async function discoverBridge() {
-  try {
-    const res = await fetchWithTimeout("https://discovery.meethue.com/");
-    const bridgeIps = await res.json();
-
-    for (let i = 0; i < bridgeIps.length; i++) {
-      try {
-        const bridge = bridgeIps[i].internalipaddress;
-        console.log(bridge);
-        await fetchWithTimeout("http://" + bridge + "/api");
-        return bridge;
-      } catch (error) {
-        console.log("this is not the bridge");
-        continue;
-      }
-    }
-  } catch (err) {
-    console.log("thiserror");
-    console.error(err);
-  }
-}
-
-//============================
-// Fetch time out function
-//============================
-
-const fetchWithTimeout = (url) => {
-  const timeout = 1500;
-  const { ...fetchOptions } = timeout;
-
-  try {
-    return Promise.race([
-      fetch(url, fetchOptions),
-      new Promise((_, reject) => {
-        setTimeout(() => {
-          reject(
-            new Error(
-              `Request for ${url} timed out after ${timeout} milliseconds`
-            )
-          );
-        }, timeout);
-      }),
-    ]);
-  } catch (error) {
-    console.log("ERROR HERE" + error);
-  }
-};
-
 //======================================================================
 // GET - Get all lights that have been discovered on the Bridge network
 // Returns JSON containing device data
@@ -202,5 +141,78 @@ export const savedLights = async (hueIp, hueUsername) => {
     return data;
   } catch (err) {
     console.log(err);
+  }
+};
+
+//==============================================================================
+// PUT - Toggle a light that exists on Bridge network
+//
+// Body: {"on": bool}
+//==============================================================================
+
+export const toggleLight = async (id, on, hueIp, hueUsername) => {
+  try {
+    return await axios.put(
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id + "/state",
+      {
+        on: on,
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+//==============================================================================
+// PUT - Control brightness of a light that exists on Bridge network
+//
+// Body: {"bri": [number 1 -245]}
+//==============================================================================
+
+export const controlBrightness = async (id, bri, hueIp, hueUsername) => {
+  try {
+    return await axios.put(
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id + "/state",
+      {
+        bri: bri,
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+  return bri;
+};
+
+//==============================================================================
+// PUT - Allows user to change the name of the light
+//
+// Body: {"name: user defined"}
+//==============================================================================
+
+export const renameLight = async (id, name, hueIp, hueUsername) => {
+  try {
+    return await axios.put(
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id,
+      {
+        name: name,
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//==============================================================================
+// DELETE - Allows user to change the name of the light
+//==============================================================================
+
+export const deleteHueLight = async (id, hueIp, hueUsername) => {
+  try {
+    await axios.delete(
+      "http://" + hueIp + "/api/" + hueUsername + "/lights/" + id
+    );
+    return true;
+  } catch (error) {
+    console.log(error);
   }
 };

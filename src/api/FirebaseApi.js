@@ -23,10 +23,10 @@ import {
 
 firebase.initializeApp(firebaseConfig);
 
-//==================================
-// Signs in with email and password
+//===============================================================
+// Authentication requests to Firebase API
 // Returns: success
-//==================================
+//===============================================================
 export const LoginUser = async (email, password) => {
   try {
     const auth = getAuth();
@@ -38,10 +38,6 @@ export const LoginUser = async (email, password) => {
   }
 };
 
-//===================================
-// Registers with email and password
-// Returns: success
-//===================================
 export const RegisterUser = async (email, password) => {
   try {
     const auth = getAuth();
@@ -54,10 +50,6 @@ export const RegisterUser = async (email, password) => {
   }
 };
 
-//==================================================
-// De-authenticates user and clears local storage
-// Returns: success
-//==================================================
 export const LogoutUser = async () => {
   try {
     const auth = getAuth();
@@ -88,7 +80,7 @@ export const storeUsername = (username) => {
 
 //===============================================
 // Stores IP address of the Hue Bridge
-// Merges with current information
+// Merges with existing fields
 //===============================================
 export const storeIp = async (ip) => {
   try {
@@ -107,7 +99,7 @@ export const storeIp = async (ip) => {
 
 //===============================================
 // Stores generated Username of the Hue Bridge
-// Merges with current information
+// Merges with existing fields
 //===============================================
 
 export const storeHueUsername = async (hueUsername) => {
@@ -120,57 +112,6 @@ export const storeHueUsername = async (hueUsername) => {
       },
       { merge: true }
     );
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-//===============================================
-// Returns the IP of the Hue Bridge
-//===============================================
-export const getIP = () => {
-  try {
-    const username = localStorage.getItem("email");
-    const db = firebase.firestore();
-    db.collection("users")
-      .doc(username)
-      .get()
-      .then(function (doc) {
-        if (doc.exists) {
-          console.log("Document Data: ", doc.data().hueIp);
-        } else {
-          console.log("Error getting document");
-        }
-      });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-//==================================================
-// Returns the generated Username of the Hue Bridge
-//==================================================
-
-export const getHueUsername = () => {
-  try {
-    const username = localStorage.getItem("email");
-    const db = firebase.firestore();
-    var promise = db.collection("users").doc(username);
-
-    promise.get().then((snapshot) => {
-      let field = snapshot.get("hueUsername");
-      console.log(field);
-      return field;
-    });
-
-    // .then(function (doc) {
-    //   if (doc.exists) {
-    //     console.log(doc.data().hueUsername);
-    //     return doc.data().hueUsername;
-    //   } else {
-    //     console.log("Error getting document");
-    //   }
-    // })
   } catch (error) {
     console.log(error);
   }

@@ -6,10 +6,11 @@ import { savedLights } from "../api/HueApi";
 import DeviceCard from "../components/DeviceCard";
 import DeviceListItem from "../components/DeviceListItem";
 
-//==================================
-// Generates Device Cards
+//==============================================
+// Generates Device Cards (has settings option)
 // Returns array of Card components
-//==================================
+//==============================================
+
 export const getLightCards = async (hueIp: string, hueUsername: string) => {
   const data: any = await savedLights(hueIp, hueUsername);
   const deviceList: any = [];
@@ -32,10 +33,11 @@ export const getLightCards = async (hueIp: string, hueUsername: string) => {
   return deviceList;
 };
 
-//==================================
-// Generates Device *LIST* Cards
+//===================================================
+// Generates Device *LIST* Cards (simple appearance)
 // Returns array of Card components
-//==================================
+//===================================================
+
 export const getLightList = async (hueIp: string, hueUsername: string) => {
   const data: any = await savedLights(hueIp, hueUsername);
   const deviceList: any = [];

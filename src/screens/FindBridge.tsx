@@ -19,7 +19,7 @@ import {
 // Navigates back to home on successful discovery
 //================================================
 
-const FindBridge: React.FC = (props) => {
+const FindBridge: React.FC = () => {
   const history = useHistory();
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);

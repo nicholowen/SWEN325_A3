@@ -35,6 +35,7 @@ const LightSettings: React.FC = () => {
   const [showErrorToast, setShowErrorToast] = useState(false);
 
   useEffect(() => {
+    //get storage and retrieve light parameters
     getLightConfig().then((value) => {
       console.log(value);
       setId(value.id);
@@ -44,6 +45,7 @@ const LightSettings: React.FC = () => {
     });
   }, [lightCache]);
 
+  //rename lights
   const rename = async () => {
     const renamed = await renameLight(id, nameInput, hueIp, hueUsername);
     if (renamed) {
@@ -53,6 +55,7 @@ const LightSettings: React.FC = () => {
     }
   };
 
+  //delete light from Hue Bridge
   const deleteLight = async () => {
     const deleted = await deleteHueLight(id, hueIp, hueUsername);
     if (deleted) {
